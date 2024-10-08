@@ -7,21 +7,19 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-
-	trshttp "github.com/fumiama/terasu/http"
 )
 
 // NewDefaultClient ...
 func NewDefaultClient() *http.Client {
-	cp := trshttp.DefaultClient
-	return &cp
+	cp := http.DefaultClient
+	return cp
 }
 
 // NewTLS12Client ...
 func NewTLS12Client() *http.Client {
 	return &http.Client{
 		Transport: &http.Transport{
-			DialTLSContext: trshttp.DefaultClient.Transport.(*http.Transport).DialTLSContext,
+			DialTLSContext: http.DefaultClient.Transport.(*http.Transport).DialTLSContext,
 			TLSClientConfig: &tls.Config{
 				MaxVersion: tls.VersionTLS12,
 			},
@@ -92,10 +90,8 @@ func RequestDataWithHeaders(client *http.Client, url, method string, setheaders 
 // GetData 获取数据
 func GetData(url string) (data []byte, err error) {
 	var response *http.Response
-	response, err = trshttp.Get(url)
-	if err != nil {
-		response, err = http.Get(url)
-	}
+	response, err = http.Get(url)
+
 	if err == nil {
 		if response.StatusCode != http.StatusOK {
 			s := fmt.Sprintf("status code: %d", response.StatusCode)
@@ -111,10 +107,7 @@ func GetData(url string) (data []byte, err error) {
 // PostData 获取数据
 func PostData(url, contentType string, body io.Reader) (data []byte, err error) {
 	var response *http.Response
-	response, err = trshttp.Post(url, contentType, body)
-	if err != nil {
-		response, err = http.Post(url, contentType, body)
-	}
+	response, err = http.Post(url, contentType, body)
 	if err == nil {
 		if response.StatusCode != http.StatusOK {
 			s := fmt.Sprintf("status code: %d", response.StatusCode)
@@ -130,10 +123,7 @@ func PostData(url, contentType string, body io.Reader) (data []byte, err error) 
 // HeadRequestURL 获取跳转后的链接
 func HeadRequestURL(u string) (newu string, err error) {
 	var data *http.Response
-	data, err = trshttp.Head(u)
-	if err != nil {
-		data, err = http.Head(u)
-	}
+	data, err = http.Head(u)
 	if err != nil {
 		return "", err
 	}

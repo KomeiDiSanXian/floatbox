@@ -19,7 +19,7 @@ func NewDefaultClient() *http.Client {
 func NewTLS12Client() *http.Client {
 	return &http.Client{
 		Transport: &http.Transport{
-			DialTLSContext: http.DefaultClient.Transport.(*http.Transport).DialTLSContext,
+			DialTLSContext: http.DefaultTransport.(*http.Transport).DialContext,
 			TLSClientConfig: &tls.Config{
 				MaxVersion: tls.VersionTLS12,
 			},
